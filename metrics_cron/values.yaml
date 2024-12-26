@@ -1,0 +1,14 @@
+# CronJob
+cronJob:
+  schedule: "*/5 * * * *"
+  image:
+    repository: indrasohoni/o2n
+    tag: latest
+  outputDir: "/metrics"
+  metricsUrl: "http://node-exporter:9100/metrics"
+
+# PV Config
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: ""

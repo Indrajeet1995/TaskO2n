@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: node-metrics-cron
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "{{ .Values.cronJob.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: node-metrics
+              image: "{{ .Values.cronJob.image.repository }}:{{ .Values.cronJob.image.tag }}"
+              args:
+                - "{{ .Values.cronJob.metricsUrl }}"
+                - "{{ .Values.cronJob.outputDir }}"
+              volumeMounts:
+                - name: metrics-volume
+                  mountPath: "{{ .Values.cronJob.outputDir }}"
+          restartPolicy: OnFailure
+          volumes:
+            - name: metrics-volume
+              hostPath:
+                path: /metrics
+                type: DirectoryOrCreate
+
